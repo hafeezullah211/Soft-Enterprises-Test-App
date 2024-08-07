@@ -3,6 +3,7 @@ import { Container, Typography, Box, Button, Grid } from '@mui/material';
 import axios from 'axios';
 import FormField from '../components/FormField';
 import ProductList from '../components/ProductList';
+import UserMenu from '../components/UserMenu';
 
 interface Product {
   _id: string;
@@ -25,7 +26,7 @@ const ProductPage: React.FC = () => {
     const fetchProducts = async () => {
       try {
         const token = localStorage.getItem('token');
-        const { data } = await axios.get('/api/products/user-products', {
+        const { data } = await axios.get('http://localhost:5000/api/products/user-products', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setProducts(data);
@@ -58,7 +59,7 @@ const ProductPage: React.FC = () => {
       pictures.forEach((picture) => formData.append('pictures', picture));
 
       const token = localStorage.getItem('token');
-      await axios.post('/api/products/add', formData, {
+      const response = await axios.post('http://localhost:5000/api/products/add', formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'multipart/form-data',
@@ -70,7 +71,7 @@ const ProductPage: React.FC = () => {
       setPrice('');
       setQuantity('');
       setPictures([]);
-      setProducts([...products, { name, price: Number(price), quantity: Number(quantity), pictures: formData.getAll('pictures') as string[], _id: new Date().toISOString() }]);
+      setProducts([...products, response.data]);
     } catch (err) {
       setError('Failed to add product');
     }
@@ -78,8 +79,9 @@ const ProductPage: React.FC = () => {
 
   return (
     <Container component="main">
+      <UserMenu />
       <Box sx={{ marginTop: 8, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-        <Typography component="h1" variant="h5">Add Product</Typography>
+        <Typography component="h1" variant="h5">Add Products</Typography>
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
           <FormField label="Product Name" value={name} onChange={(e) => setName(e.target.value)} required />
           <FormField label="Product Price" type="number" value={price} onChange={(e) => setPrice(Number(e.target.value))} required />

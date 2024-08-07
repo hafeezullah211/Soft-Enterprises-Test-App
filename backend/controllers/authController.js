@@ -57,4 +57,18 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { registerUser, authUser };
+
+const getUserDetails = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.user._id).select('-password');
+  if (!user) {
+    res.status(404).json({ message: 'User not found' });
+  } else {
+    res.json({
+      _id: user._id,
+      name: user.name,
+      email: user.email
+    });
+  }
+});
+
+module.exports = { registerUser, authUser, getUserDetails };

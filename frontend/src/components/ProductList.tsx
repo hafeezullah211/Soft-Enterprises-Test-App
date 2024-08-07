@@ -27,7 +27,7 @@ const ProductList: React.FC<ProductListProps> = ({ products }) => {
           <Grid container spacing={2} sx={{ mt: 1 }}>
             {product.pictures.map((picture, index) => (
               <Grid item key={index} xs={4}>
-                <img src={`/${picture}`} alt="product" style={{ width: '100%' }} />
+                <img src={`../../../backend/${picture}`} alt="product" style={{ width: '100%' }} />
               </Grid>
             ))}
           </Grid>
